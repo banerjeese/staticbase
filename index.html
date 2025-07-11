@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fffcf2;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+        }
+
+        .back-button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .file-count {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .file-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .file-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #27ae60;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .file-description {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-weight: 400;
+        }
+
+        .content-view {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .content-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .content-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .content-item {
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s ease;
+        }
+
+        .content-item:hover {
+            background: #e8f4f8;
+            transform: translateX(5px);
+        }
+
+        .content-item strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 25px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.2);
+        }
+
+        .current-view {
+            display: block;
+        }
+
+        .hidden-view {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            font-weight: 400;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .upload-section {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .upload-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .upload-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .tip-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            text-align: left;
+            border-left: 4px solid #3498db;
+        }
+
+        .tip-box strong {
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .back-button {
+                position: static;
+                margin-bottom: 20px;
+                display: block;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-button" onclick="goBack()">← Back</button>
+        
+        <div class="header">
+            <h1>📚 Static Base Explorer</h1>
+            <p>Explore organized static GS across different categories</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="🔍 Search categories, files, or content..." onkeyup="searchContent(this.value)">
+        </div>
+
+        <div id="categories-view" class="current-view">
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div id="files-view" class="hidden-view">
+            <div class="files-grid" id="filesGrid">
+                <!-- Files will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div id="content-view" class="hidden-view">
+            <div class="content-view" id="contentContainer">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File categorization data
+        const categories = {
+            'Culture & Arts': {
+                description: 'Traditional arts, festivals, dance forms, and cultural heritage',
+                files: {
+                    'festivals.txt': 'Various Indian festivals and their significance',
+                    'classicaldance.txt': 'Classical dance forms of India',
+                    'folkdance.txt': 'Folk dance traditions across different regions',
+                    'artforms.txt': 'Traditional and contemporary art forms'
+                },
+                color: '#e74c3c'
+            },
+            'Polity & Governance': {
+                description: 'Constitutional amendments, government structures, and political systems',
+                files: {
+                    'amendments.txt': 'Constitutional amendments and their details',
+                    'amendments2.txt': 'Additional constitutional amendments',
+                    'amendments3.txt': 'More constitutional amendments',
+                    'amendments4.txt': 'Recent constitutional amendments',
+                    'articles.txt': 'Important articles of the constitution',
+                    'schedules.txt': 'Constitutional schedules and their provisions'
+                },
+                color: '#3498db'
+            },
+            'Geography': {
+                description: 'Physical features, boundaries, and geographical information',
+                files: {
+                    'boundary_lines.txt': 'International and state boundary lines',
+                    'deserts.txt': 'Major deserts and their characteristics',
+                    'lakes.txt': 'Important lakes and water bodies',
+                    'grassland.txt': 'Grasslands and their ecosystems',
+                    'geo_miscellinious.txt': 'Miscellaneous geographical facts',
+                    'geographical_epithets.txt': 'Geographical nicknames and epithets',
+                    'city_nicknames.txt': 'Famous nicknames of cities',
+                    'map_lines.txt': 'Important lines on maps'
+                },
+                color: '#27ae60'
+            },
+            'Environment & Wildlife': {
+                description: 'National parks, environmental protection, and wildlife conservation',
+                files: {
+                    'nationalparks.txt': 'National parks and wildlife sanctuaries',
+                    'imp_envdays.txt': 'Important environmental days',
+                    'imp_envyears.txt': 'Important environmental years and decades'
+                },
+                color: '#2ecc71'
+            },
+            'Defense & Security': {
+                description: 'Armed forces, defense operations, and security measures',
+                files: {
+                    'armedforces_projects.txt': 'Armed forces projects and initiatives',
+                    'recent_defenceex.txt': 'Recent defense exercises and operations',
+                    'operations.txt': 'Military operations and their details',
+                    'cmndsInstLOC.txt': 'Command institutes and their locations'
+                },
+                color: '#e67e22'
+            },
+            'Awards & Recognition': {
+                description: 'National awards, honors, and recognition schemes',
+                files: {
+                    'Arjunaaward.txt': 'Arjuna Award recipients and criteria',
+                    'dronachariyaaward.txt': 'Dronacharya Award recipients and criteria'
+                },
+                color: '#f39c12'
+            },
+            'History & Heritage': {
+                description: 'Historical events, freedom struggle, and heritage sites',
+                files: {
+                    'firstIn_history.txt': 'First occurrences in Indian history',
+                    'firstIn_history2.txt': 'More historical firsts',
+                    'firstIn_history3.txt': 'Additional historical firsts',
+                    'famoussites_Ind.txt': 'Famous historical sites in India',
+                    'revolution_father.txt': 'Fathers of various revolutions',
+                    'revolution_purpose.txt': 'Purposes and outcomes of revolutions'
+                },
+                color: '#9b59b6'
+            },
+            'Science & Technology': {
+                description: 'Scientific instruments, biology, and technological advancements',
+                files: {
+                    'measuring_instrument.txt': 'Scientific measuring instruments',
+                    'animaltissue.txt': 'Animal tissue types and functions',
+                    'planttissue.txt': 'Plant tissue types and functions',
+                    'probability.txt': 'Probability concepts and applications'
+                },
+                color: '#34495e'
+            },
+            'Administration & Protocol': {
+                description: 'Government protocols, borrowed features, and administrative systems',
+                files: {
+                    'protocol.txt': 'Government protocols and procedures',
+                    'borrowedfeatures.txt': 'Features borrowed from other constitutions',
+                    'mottos.txt': 'National and state mottos'
+                },
+                color: '#95a5a6'
+            }
+        };
+
+        let currentView = 'categories';
+        let currentCategory = '';
+        let currentFile = '';
+
+        function initializeApp() {
+            displayCategories();
+        }
+
+        function displayCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = '';
+            
+            Object.entries(categories).forEach(([categoryName, categoryData]) => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => showFiles(categoryName);
+                
+                const fileCount = Object.keys(categoryData.files).length;
+                
+                card.innerHTML = `
+                    <div class="category-title" style="color: ${categoryData.color}">${categoryName}</div>
+                    <div class="category-description">${categoryData.description}</div>
+                    <div class="file-count">${fileCount} files</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function showFiles(categoryName) {
+            currentCategory = categoryName;
+            currentView = 'files';
+            
+            document.getElementById('categories-view').className = 'hidden-view';
+            document.getElementById('files-view').className = 'current-view';
+            document.getElementById('content-view').className = 'hidden-view';
+            document.querySelector('.back-button').style.display = 'block';
+            
+            const grid = document.getElementById('filesGrid');
+            grid.innerHTML = '';
+            
+            const categoryData = categories[categoryName];
+            
+            Object.entries(categoryData.files).forEach(([fileName, description]) => {
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.onclick = () => showContent(fileName);
+                
+                card.innerHTML = `
+                    <div class="file-title">${fileName.replace('.txt', '').replace(/_/g, ' ')}</div>
+                    <div class="file-description">${description}</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        async function showContent(fileName) {
+            currentFile = fileName;
+            currentView = 'content';
+            
+            document.getElementById('categories-view').className = 'hidden-view';
+            document.getElementById('files-view').className = 'hidden-view';
+            document.getElementById('content-view').className = 'current-view';
+            
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '<div class="loading">Loading content...</div>';
+            
+            try {
+                let content = [];
+                
+                // Try to read the actual file using fetch
+                try {
+                    const response = await fetch(fileName);
+                    if (response.ok) {
+                        const fileContent = await response.text();
+                        content = parseFileContent(fileContent);
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                } catch (error) {
+                    console.log('Could not read file via fetch:', error);
+                    // Show file upload option
+                    showFileUploadOption(fileName);
+                    return;
+                }
+                
+                displayContent(fileName, content);
+            } catch (error) {
+                container.innerHTML = `<div class="error">Error loading content: ${error.message}</div>`;
+            }
+        }
+
+        function parseFileContent(content) {
+            // Split content by lines and filter out empty lines
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            
+            // Process each line to extract the numbered items
+            return lines.map(line => {
+                // Remove leading numbers and format if present
+                return line.replace(/^\d+\.\s*/, '').trim();
+            }).filter(line => line !== '');
+        }
+
+        function showFileUploadOption(fileName) {
+            const container = document.getElementById('contentContainer');
+            const displayName = fileName.replace('.txt', '').replace(/_/g, ' ').toUpperCase();
+            
+            container.innerHTML = `
+                <div class="content-title">${displayName}</div>
+                <div class="upload-section">
+                    <p style="font-size: 1.2em; color: #7f8c8d; margin-bottom: 20px;">
+                        📁 File not found: <strong>${fileName}</strong>
+                    </p>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">
+                        Please upload the file or ensure it's in the same directory as this HTML file.
+                    </p>
+                    <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="handleFileUpload(event, '${fileName}')">
+                    <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                        📤 Upload ${fileName}
+                    </button>
+                    <div class="tip-box">
+                        <strong>💡 Tip:</strong> For best results, place all your .txt files in the same folder as this HTML file and use a local server (like Python's http.server) to serve the files.
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleFileUpload(event, expectedFileName) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = parseFileContent(e.target.result);
+                displayContent(expectedFileName, content);
+            };
+            reader.readAsText(file);
+        }
+
+        function displayContent(fileName, content) {
+            const container = document.getElementById('contentContainer');
+            const displayName = fileName.replace('.txt', '').replace(/_/g, ' ').toUpperCase();
+            
+            let html = `<div class="content-title">${displayName}</div>`;
+            
+            if (content.length > 0) {
+                html += '<ul class="content-list">';
+                content.forEach((item, index) => {
+                    // Check if item contains a colon (key-value format)
+                    if (item.includes(':')) {
+                        const [key, value] = item.split(':', 2);
+                        html += `
+                            <li class="content-item">
+                                <strong>${key.trim()}:</strong> ${value.trim()}
+                            </li>
+                        `;
+                    } else {
+                        html += `
+                            <li class="content-item">
+                                <strong>${index + 1}.</strong> ${item}
+                            </li>
+                        `;
+                    }
+                });
+                html += '</ul>';
+            } else {
+                html += '<div class="error">No content available for this file.</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function goBack() {
+            if (currentView === 'content') {
+                showFiles(currentCategory);
+            } else if (currentView === 'files') {
+                currentView = 'categories';
+                document.getElementById('categories-view').className = 'current-view';
+                document.getElementById('files-view').className = 'hidden-view';
+                document.getElementById('content-view').className = 'hidden-view';
+                document.querySelector('.back-button').style.display = 'none';
+            }
+        }
+
+        function searchContent(query) {
+            query = query.toLowerCase().trim();
+            
+            if (query === '') {
+                // Show all items
+                document.querySelectorAll('.category-card, .file-card').forEach(card => {
+                    card.style.display = 'block';
+                });
+                return;
+            }
+            
+            if (currentView === 'categories') {
+                document.querySelectorAll('.category-card').forEach(card => {
+                    const title = card.querySelector('.category-title').textContent.toLowerCase();
+                    const description = card.querySelector('.category-description').textContent.toLowerCase();
+                    
+                    if (title.includes(query) || description.includes(query)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            } else if (currentView === 'files') {
+                document.querySelectorAll('.file-card').forEach(card => {
+                    const title = card.querySelector('.file-title').textContent.toLowerCase();
+                    const description = card.querySelector('.file-description').textContent.toLowerCase();
+                    
+                    if (title.includes(query) || description.includes(query)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
