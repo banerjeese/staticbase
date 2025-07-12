@@ -397,6 +397,191 @@
                 text-align: center;
             }
         }
+
+        .quiz-button {
+    background: #9b59b6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.quiz-button:hover {
+    background: #8e44ad;
+    transform: translateY(-2px);
+}
+
+.quiz-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.quiz-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.quiz-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.quiz-header h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.question-counter {
+    background: #3498db;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    display: inline-block;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.question-text {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.options-container {
+    margin-bottom: 25px;
+}
+
+.option-button {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border: 2px solid #bdc3c7;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.option-button:hover {
+    border-color: #3498db;
+    background: #f8f9fa;
+}
+
+.option-button.selected {
+    border-color: #3498db;
+    background: #e8f4f8;
+}
+
+.quiz-controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.quiz-nav-button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+.quiz-nav-button:hover {
+    background: #2980b9;
+}
+
+.quiz-nav-button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.close-quiz {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.quiz-results {
+    text-align: center;
+    padding: 20px;
+}
+
+.score-display {
+    font-size: 2em;
+    font-weight: bold;
+    color: #27ae60;
+    margin-bottom: 20px;
+}
+
+.question-limit-input {
+    width: 100px;
+    padding: 10px;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 1em;
+    text-align: center;
+    margin: 10px;
+}
+
+.start-quiz-button {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.start-quiz-button:hover {
+    background: #229954;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2em;
+    color: #7f8c8d;
+}
+
+        
     </style>
 </head>
 <body>
@@ -463,7 +648,6 @@
                     'deserts.txt': 'Major deserts and their characteristics',
                     'lakes.txt': 'Important lakes and water bodies',
                     'grassland.txt': 'Grasslands and their ecosystems',
-                    'geo_miscellinious.txt': 'Miscellaneous geographical facts',
                     'geographical_epithets.txt': 'Geographical nicknames and epithets',
                     'city_nicknames.txt': 'Famous nicknames of cities',
                     'map_lines.txt': 'Important lines on maps'
@@ -473,6 +657,7 @@
             'Environment & Wildlife': {
                 description: 'National parks, environmental protection, and wildlife conservation',
                 files: {
+                    'protocol.txt': 'Environment protocols and their purpose',
                     'nationalparks.txt': 'National parks and wildlife sanctuaries',
                     'imp_envdays.txt': 'Important environmental days',
                     'imp_envyears.txt': 'Important environmental years and decades'
@@ -482,10 +667,11 @@
             'Defense & Security': {
                 description: 'Armed forces, defense operations, and security measures',
                 files: {
-                    'armedforces_projects.txt': 'Armed forces projects and initiatives',
+                    'armedforces_projects.txt': 'indian navy ships and their classes',
                     'recent_defenceex.txt': 'Recent defense exercises and operations',
                     'operations.txt': 'Military operations and their details',
-                    'cmndsInstLOC.txt': 'Command institutes and their locations'
+                    'cmndsInstLOC.txt': 'Command institutes and their locations',
+                    'mottos.txt': 'National and state mottos'
                 },
                 color: '#e67e22'
             },
@@ -522,9 +708,7 @@
             'Administration & Protocol': {
                 description: 'Government protocols, borrowed features, and administrative systems',
                 files: {
-                    'protocol.txt': 'Government protocols and procedures',
                     'borrowedfeatures.txt': 'Features borrowed from other constitutions',
-                    'mottos.txt': 'National and state mottos'
                 },
                 color: '#95a5a6'
             }
@@ -559,34 +743,38 @@
             });
         }
 
-        function showFiles(categoryName) {
-            currentCategory = categoryName;
-            currentView = 'files';
-            
-            document.getElementById('categories-view').className = 'hidden-view';
-            document.getElementById('files-view').className = 'current-view';
-            document.getElementById('content-view').className = 'hidden-view';
-            document.querySelector('.back-button').style.display = 'block';
-            
-            const grid = document.getElementById('filesGrid');
-            grid.innerHTML = '';
-            
-            const categoryData = categories[categoryName];
-            
-            Object.entries(categoryData.files).forEach(([fileName, description]) => {
-                const card = document.createElement('div');
-                card.className = 'file-card';
-                card.onclick = () => showContent(fileName);
-                
-                card.innerHTML = `
-                    <div class="file-title">${fileName.replace('.txt', '').replace(/_/g, ' ')}</div>
-                    <div class="file-description">${description}</div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
+     function showFiles(categoryName) {
+    currentCategory = categoryName;
+    currentView = 'files';
+    
+    document.getElementById('categories-view').className = 'hidden-view';
+    document.getElementById('files-view').className = 'current-view';
+    document.getElementById('content-view').className = 'hidden-view';
+    document.querySelector('.back-button').style.display = 'block';
+    
+    const grid = document.getElementById('filesGrid');
+    grid.innerHTML = '';
+    
+    const categoryData = categories[categoryName];
+    
+    Object.entries(categoryData.files).forEach(([fileName, description]) => {
+        const card = document.createElement('div');
+        card.className = 'file-card';
+        
+        card.innerHTML = `
+            <div class="file-title">${fileName.replace('.txt', '').replace(/_/g, ' ')}</div>
+            <div class="file-description">${description}</div>
+            <div style="margin-top: 15px;">
+                <button onclick="showContent('${fileName}')" style="background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85em; margin-right: 10px;">📖 View Content</button>
+                <button class="quiz-button" onclick="startQuiz('${fileName}')">🧠 Take Quiz</button>
+            </div>
+        `;
+        
+        grid.appendChild(card);
+    });
+}
+        
+        
         async function showContent(fileName) {
             currentFile = fileName;
             currentView = 'content';
@@ -802,6 +990,268 @@
 
         // Initialize the app when the page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
+
+// Quiz variables
+let currentQuiz = null;
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let quizData = [];
+
+// Gemini API configuration
+const GEMINI_API_KEY = 'AIzaSyBoYtHlEf2W4g4BBeWUoCOlwAoOs8yIT_w';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+
+async function startQuiz(fileName) {
+    // Show quiz setup modal
+    showQuizSetup(fileName);
+}
+
+function showQuizSetup(fileName) {
+    const modal = document.createElement('div');
+    modal.className = 'quiz-modal';
+    modal.innerHTML = `
+        <div class="quiz-content">
+            <button class="close-quiz" onclick="closeQuizModal()">&times;</button>
+            <div class="quiz-header">
+                <h2>📝 Quiz Setup</h2>
+                <p>File: ${fileName.replace('.txt', '').replace(/_/g, ' ')}</p>
+            </div>
+            <div style="text-align: center;">
+                <p>How many questions would you like?</p>
+                <input type="number" class="question-limit-input" id="questionLimit" value="10" min="5" max="50">
+                <br>
+                <button class="start-quiz-button" onclick="generateQuiz('${fileName}')">Start Quiz</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+async function generateQuiz(fileName) {
+    const questionLimit = document.getElementById('questionLimit').value;
+    const modal = document.querySelector('.quiz-modal');
+    
+    // Show loading
+    modal.querySelector('.quiz-content').innerHTML = `
+        <button class="close-quiz" onclick="closeQuizModal()">&times;</button>
+        <div class="loading-spinner">
+            <div>🔄 Generating quiz questions...</div>
+            <div style="margin-top: 10px; font-size: 0.9em;">This may take a moment</div>
+        </div>
+    `;
+    
+    try {
+        // Read file content
+        let fileContent = '';
+        try {
+            const response = await fetch(fileName);
+            if (response.ok) {
+                fileContent = await response.text();
+            } else {
+                throw new Error('Could not read file');
+            }
+        } catch (error) {
+            throw new Error('Please make sure the file is available in the same directory');
+        }
+        
+        // Generate quiz using Gemini API
+        const quizQuestions = await generateQuestionsWithGemini(fileContent, questionLimit);
+        
+        // Initialize quiz
+        currentQuiz = fileName;
+        currentQuestionIndex = 0;
+        userAnswers = [];
+        quizData = quizQuestions;
+        
+        // Start showing questions
+        showQuizQuestion();
+        
+    } catch (error) {
+        modal.querySelector('.quiz-content').innerHTML = `
+            <button class="close-quiz" onclick="closeQuizModal()">&times;</button>
+            <div class="error">Error: ${error.message}</div>
+            <button onclick="startQuiz('${fileName}')" style="margin-top: 15px;" class="start-quiz-button">Try Again</button>
+        `;
+    }
+}
+
+async function generateQuestionsWithGemini(content, questionLimit) {
+    const prompt = `Based ONLY on the following content, create exactly ${questionLimit} multiple choice questions. Each question should have 4 options (A, B, C, D) with only one correct answer. 
+
+Content:
+${content}
+
+Requirements:
+- Use ONLY information from the provided content
+- Do not add external knowledge
+- Create questions that test understanding of the content
+- Provide clear, unambiguous questions
+- Make sure each question has exactly 4 options
+- Indicate the correct answer
+
+Format your response as a JSON array with this structure:
+[
+  {
+    "question": "Question text here?",
+    "options": ["A) Option 1", "B) Option 2", "C) Option 3", "D) Option 4"],
+    "correct": 0,
+    "explanation": "Brief explanation of why this is correct"
+  }
+]
+
+The "correct" field should be the index (0-3) of the correct option.`;
+
+    const requestBody = {
+        contents: [{
+            parts: [{
+                text: prompt
+            }]
+        }]
+    };
+
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const generatedText = data.candidates[0].content.parts[0].text;
+    
+    // Extract JSON from the response
+    const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+        throw new Error('Could not parse quiz questions from API response');
+    }
+
+    try {
+        return JSON.parse(jsonMatch[0]);
+    } catch (error) {
+        throw new Error('Invalid JSON format in API response');
+    }
+}
+
+function showQuizQuestion() {
+    const modal = document.querySelector('.quiz-modal');
+    const currentQuestion = quizData[currentQuestionIndex];
+    
+    modal.querySelector('.quiz-content').innerHTML = `
+        <button class="close-quiz" onclick="closeQuizModal()">&times;</button>
+        <div class="quiz-header">
+            <div class="question-counter">Question ${currentQuestionIndex + 1} of ${quizData.length}</div>
+            <div class="question-text">${currentQuestion.question}</div>
+        </div>
+        <div class="options-container">
+            ${currentQuestion.options.map((option, index) => `
+                <button class="option-button" onclick="selectOption(${index})" data-index="${index}">
+                    ${option}
+                </button>
+            `).join('')}
+        </div>
+        <div class="quiz-controls">
+            <button class="quiz-nav-button" onclick="previousQuestion()" ${currentQuestionIndex === 0 ? 'disabled' : ''}>Previous</button>
+            <button class="quiz-nav-button" onclick="nextQuestion()" id="nextButton" disabled>
+                ${currentQuestionIndex === quizData.length - 1 ? 'Finish Quiz' : 'Next'}
+            </button>
+        </div>
+    `;
+    
+    // Restore previous answer if exists
+    if (userAnswers[currentQuestionIndex] !== undefined) {
+        const selectedOption = modal.querySelector(`[data-index="${userAnswers[currentQuestionIndex]}"]`);
+        if (selectedOption) {
+            selectedOption.classList.add('selected');
+            document.getElementById('nextButton').disabled = false;
+        }
+    }
+}
+
+function selectOption(optionIndex) {
+    // Remove previous selection
+    document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+    
+    // Add selection to clicked option
+    document.querySelector(`[data-index="${optionIndex}"]`).classList.add('selected');
+    
+    // Store answer
+    userAnswers[currentQuestionIndex] = optionIndex;
+    
+    // Enable next button
+    document.getElementById('nextButton').disabled = false;
+}
+
+function nextQuestion() {
+    if (currentQuestionIndex < quizData.length - 1) {
+        currentQuestionIndex++;
+        showQuizQuestion();
+    } else {
+        showQuizResults();
+    }
+}
+
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuizQuestion();
+    }
+}
+
+function showQuizResults() {
+    let correctAnswers = 0;
+    let resultsHTML = '';
+    
+    quizData.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.correct;
+        if (isCorrect) correctAnswers++;
+        
+        resultsHTML += `
+            <div style="margin-bottom: 20px; padding: 15px; border-radius: 8px; ${isCorrect ? 'background: #d5f4e6; border-left: 4px solid #27ae60;' : 'background: #fdf2f2; border-left: 4px solid #e74c3c;'}">
+                <div style="font-weight: 600; margin-bottom: 8px;">Q${index + 1}: ${question.question}</div>
+                <div style="margin-bottom: 5px;">Your answer: ${question.options[userAnswer] || 'Not answered'}</div>
+                <div style="margin-bottom: 5px;">Correct answer: ${question.options[question.correct]}</div>
+                <div style="font-style: italic; color: #666;">${question.explanation}</div>
+            </div>
+        `;
+    });
+    
+    const percentage = Math.round((correctAnswers / quizData.length) * 100);
+    const modal = document.querySelector('.quiz-modal');
+    
+    modal.querySelector('.quiz-content').innerHTML = `
+        <button class="close-quiz" onclick="closeQuizModal()">&times;</button>
+        <div class="quiz-results">
+            <h2>🎉 Quiz Complete!</h2>
+            <div class="score-display">${correctAnswers}/${quizData.length} (${percentage}%)</div>
+            <div style="margin-bottom: 20px; font-size: 1.1em;">
+                ${percentage >= 80 ? '🌟 Excellent work!' : 
+                  percentage >= 60 ? '👍 Good job!' : 
+                  '📚 Keep studying!'}
+            </div>
+        </div>
+        <div style="max-height: 300px; overflow-y: auto;">
+            ${resultsHTML}
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="start-quiz-button" onclick="closeQuizModal()">Close</button>
+        </div>
+    `;
+}
+
+function closeQuizModal() {
+    const modal = document.querySelector('.quiz-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+
     </script>
 </body>
 </html>
