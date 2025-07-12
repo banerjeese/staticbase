@@ -181,34 +181,102 @@
             font-size: 2em;
             font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             text-align: center;
             border-bottom: 3px solid #3498db;
             padding-bottom: 10px;
         }
 
-        .content-list {
-            list-style: none;
-            padding: 0;
+        .content-section {
+            margin-bottom: 40px;
         }
 
-        .content-item {
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .topic-card {
             background: #f8f9fa;
-            margin-bottom: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #e74c3c;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
             transition: all 0.3s ease;
         }
 
-        .content-item:hover {
-            background: #e8f4f8;
-            transform: translateX(5px);
+        .topic-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
-        .content-item strong {
-            color: #2c3e50;
+        .topic-name {
+            font-size: 1.4em;
             font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-transform: capitalize;
+        }
+
+        .topic-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .topic-value {
+            background: #e8f4f8;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #2c3e50;
+            font-weight: 500;
+            border: 1px solid #bdc3c7;
+        }
+
+        .topic-description {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+       .topic-image {
+            width: 100%;
+            max-width: 250px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-image-placeholder {
+            width: 100%;
+            max-width: 250px;
+            height: 180px;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 15px;
         }
 
         .search-container {
@@ -319,6 +387,15 @@
                 display: block;
                 width: fit-content;
             }
+
+            .topic-values {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .topic-value {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -327,8 +404,8 @@
         <button class="back-button" onclick="goBack()">← Back</button>
         
         <div class="header">
-            <h1>📚 Static Base Explorer</h1>
-            <p>Explore organized static GS across different categories</p>
+            <h1>📚 Knowledge Base Explorer</h1>
+            <p>Explore organized knowledge across different categories</p>
         </div>
 
         <div class="search-container">
@@ -547,14 +624,53 @@
         }
 
         function parseFileContent(content) {
-            // Split content by lines and filter out empty lines
             const lines = content.split('\n').filter(line => line.trim() !== '');
+            const topics = {};
             
-            // Process each line to extract the numbered items
-            return lines.map(line => {
+            lines.forEach(line => {
                 // Remove leading numbers and format if present
-                return line.replace(/^\d+\.\s*/, '').trim();
-            }).filter(line => line !== '');
+                const cleanLine = line.replace(/^\d+\.\s*/, '').trim();
+                
+                if (cleanLine.includes(':')) {
+                    const colonIndex = cleanLine.indexOf(':');
+                    const topicName = cleanLine.substring(0, colonIndex).trim();
+                    const topicContent = cleanLine.substring(colonIndex + 1).trim();
+                    
+                    // Parse the topic content
+                    const parsedTopic = parseTopicContent(topicContent);
+                    topics[topicName] = parsedTopic;
+                }
+            });
+            
+            return topics;
+        }
+
+        function parseTopicContent(content) {
+            const result = {
+                values: [],
+                description: '',
+                image: ''
+            };
+            
+            // Extract image URL from brackets at the end
+            const imageMatch = content.match(/\[([^\]]+)\]$/);
+            if (imageMatch) {
+                result.image = imageMatch[1];
+                content = content.replace(/\s*\[([^\]]+)\]$/, '');
+            }
+            
+            // Extract description from parentheses at the end
+            const descMatch = content.match(/\(([^)]+)\)$/);
+            if (descMatch) {
+                result.description = descMatch[1];
+                content = content.replace(/\s*\([^)]+\)$/, '');
+            }
+            
+            // Split remaining content by commas to get values
+            const values = content.split(',').map(value => value.trim()).filter(value => value);
+            result.values = values;
+            
+            return result;
         }
 
         function showFileUploadOption(fileName) {
@@ -593,32 +709,42 @@
             reader.readAsText(file);
         }
 
-        function displayContent(fileName, content) {
+        function displayContent(fileName, topics) {
             const container = document.getElementById('contentContainer');
             const displayName = fileName.replace('.txt', '').replace(/_/g, ' ').toUpperCase();
             
             let html = `<div class="content-title">${displayName}</div>`;
             
-            if (content.length > 0) {
-                html += '<ul class="content-list">';
-                content.forEach((item, index) => {
-                    // Check if item contains a colon (key-value format)
-                    if (item.includes(':')) {
-                        const [key, value] = item.split(':', 2);
+            if (Object.keys(topics).length > 0) {
+                Object.entries(topics).forEach(([topicName, topicData]) => {
+                    html += `
+                        <div class="topic-card">
+                            <div class="topic-name">${topicName}</div>
+                            <div class="topic-values">
+                    `;
+                    
+                    // Display all values as tags
+                    topicData.values.forEach(value => {
+                        html += `<span class="topic-value">${value}</span>`;
+                    });
+                    
+                    html += `</div>`;
+                    
+                    // Display description if available
+                    if (topicData.description) {
+                        html += `<div class="topic-description">${topicData.description}</div>`;
+                    }
+                    
+                    // Display image if available
+                    if (topicData.image) {
                         html += `
-                            <li class="content-item">
-                                <strong>${key.trim()}:</strong> ${value.trim()}
-                            </li>
-                        `;
-                    } else {
-                        html += `
-                            <li class="content-item">
-                                <strong>${index + 1}.</strong> ${item}
-                            </li>
+                            <img src="${topicData.image}" alt="${topicName}" class="topic-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="topic-image-placeholder" style="display: none;">🏞️ Image not available</div>
                         `;
                     }
+                    
+                    html += `</div>`;
                 });
-                html += '</ul>';
             } else {
                 html += '<div class="error">No content available for this file.</div>';
             }
