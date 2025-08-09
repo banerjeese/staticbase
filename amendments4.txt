@@ -1,7 +1,7 @@
 1. 71st_amd_act_1992: Added Konkani; Manipuri; and Nepali to the 8th Schedule.
 2. 72nd_amd_act_1992: Provided special provisions for the Tripura Tribal Areas.
 3. 73rd_amd_act_1993: Granted constitutional status to Panchayati Raj institutions.
-4. 74th_amd_act_1993: Granted constitutional status to urban local bodies (municipalities).
+4. 74th_amd_act_1993: Granted constitutional status to urban local bodies (municipalities)
 5. 75th_amd_act_1994: Empowered state legislatures to establish tribunals for rent control disputes.
 6. 76th_amd_act_1994: Included Tamil Nadu’s reservation laws in the 9th Schedule.
 7. 77th_amd_act_1995: Provided reservation in promotions for Scheduled Castes.
@@ -27,9 +27,9 @@
 27.	97th_amd_act_2012: Granted constitutional status to cooperative societies.
 28.	98th_amd_act_2013: Provided special provisions for Hyderabad-Karnataka under Article 371J.
 29.	99th_amd_act_2014: Established the National Judicial Appointments Commission(later struck down by the Supreme Court)
-30.	100th_amd_act_2015: Ratified the land boundary agreement between India and Bangladesh.
+30.	100th_amd_act_2015: Ratified the land boundary agreement between India and Bangladesh
 31.	101st_amd_act_2016: Introduced the Goods and Services Tax (GST)
 32.	102nd_amd_act_2018: Granted constitutional status to the National Commission for Backward Classes.
 33.	103rd_amd_act_2019: Provided 10% reservation for economically weaker sections (EWS) in educational institutions and government jobs.
 34.	104th_amd_act_2020: Removed the reserved seats for Anglo-Indians in Parliament and extended SC/ST reservations for another 10 years.
-35.	105th_amd_act_2021: Restored the power of state governments to identify socially and educationally backward classes (SEBCs
+35.	105th_amd_act_2021: Restored the power of state governments to identify socially and educationally backward classes (SEBCs)
